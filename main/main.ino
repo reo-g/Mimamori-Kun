@@ -134,13 +134,13 @@ void emergency(){
   tone(buzzer_pin,1046,3000);
 }
 
-void soracom_send_single(){ //シングルクリック<1>
+void soracom_send_single(){ //シングルクリック<1>　扉開閉時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(500);
   digitalWrite(soracom_signal_pin, LOW);
 }
 
-void soracom_send_double(){ //ダブルクリック<2>
+void soracom_send_double(){ //ダブルクリック<2>　熱中症危険時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(500);
   digitalWrite(soracom_signal_pin, LOW);
@@ -150,7 +150,7 @@ void soracom_send_double(){ //ダブルクリック<2>
   digitalWrite(soracom_signal_pin, LOW);
 }
 
-void soracom_send_long(){ //長押し入力<3>
+void soracom_send_long(){ //長押し入力<3>　緊急ボタン押下時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(1500);
   digitalWrite(soracom_signal_pin, LOW);
