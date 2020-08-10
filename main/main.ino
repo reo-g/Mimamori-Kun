@@ -8,6 +8,7 @@
 //ピン設定
 const int buzzer_pin = 4;
 const int emergency_button = 5;
+const int soracom_signal_pin = 7;
 const int door_sensor_pin = 12;
 
 AE_SHT31 SHT31 = AE_SHT31(0x45);
@@ -26,6 +27,7 @@ void setup() {
 
   pinMode(emergency_button,INPUT_PULLUP);
   pinMode(door_sensor_pin,INPUT_PULLUP);
+  pinMode(soracom_signal_pin, OUTPUT);
   
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.setTextColor(SSD1306_WHITE);
@@ -130,4 +132,26 @@ void get_env_info() {
 
 void emergency(){
   tone(buzzer_pin,1046,3000);
+}
+
+void soracom_send_single(){ //シングルクリック<1>
+  digitalWrite(soracom_signal_pin, HIGH);
+  delay(500);
+  digitalWrite(soracom_signal_pin, LOW);
+}
+
+void soracom_send_double(){ //ダブルクリック<2>
+  digitalWrite(soracom_signal_pin, HIGH);
+  delay(500);
+  digitalWrite(soracom_signal_pin, LOW);
+  delay(500);
+  digitalWrite(soracom_signal_pin, HIGH);
+  delay(500);
+  digitalWrite(soracom_signal_pin, LOW);
+}
+
+void soracom_send_long(){ //長押し入力<3>
+  digitalWrite(soracom_signal_pin, HIGH);
+  delay(1500);
+  digitalWrite(soracom_signal_pin, LOW);
 }
