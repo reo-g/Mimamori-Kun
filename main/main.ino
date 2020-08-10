@@ -38,10 +38,16 @@ void setup() {
 
 //変数
 float temp,humi;
+unsigned long time1;
+unsigned long time2;
+unsigned long time3;
 
 void loop() {
   get_env_info();
-
+  if (digitalRead(emergency_button) == LOW){ //緊急ボタンを押された
+  emergency();
+  }
+  delay(100);
 }
 
 void get_env_info() {
@@ -56,5 +62,8 @@ void get_env_info() {
   display.print(temp); display.println(F(" C"));
   display.print(humi); display.println(F(" %"));
   display.display();
-  delay(2000);
+}
+
+void emergency(){
+  tone(buzzer_pin,1046,3000);
 }
