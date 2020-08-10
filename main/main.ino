@@ -55,7 +55,8 @@ void loop() {
   if(digitalRead(door_sensor_pin) == HIGH){ //冷蔵庫の扉が開かれた
     if(door_recorded == false){
       open_start_time = millis(); //冷蔵庫の扉が開かれた時の時刻を記録
-      door_recorded = true; 
+      door_recorded = true;
+      soracom_send_single(); 
     }else{
       door_elapsed_time = (millis() - open_start_time)/1000;
       if(door_elapsed_time != b4_elapsed_time){      
@@ -132,6 +133,11 @@ void get_env_info() {
 
 void emergency(){
   tone(buzzer_pin,1046,3000);
+  soracom_send_long();
+}
+
+void heatstroke_alert(){
+  soracom_send_double();
 }
 
 void soracom_send_single(){ //シングルクリック<1>　扉開閉時
