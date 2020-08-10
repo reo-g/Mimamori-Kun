@@ -42,6 +42,9 @@ unsigned long open_start_time;
 boolean door_recorded = false;
 int door_elapsed_time = 0;
 int b4_elapsed_time = 100;
+int buzzer_status = 0;
+
+#define BUZZER_LEN 200
 
 void loop() {
   if (digitalRead(emergency_button) == LOW){ //緊急ボタンを押された
@@ -59,15 +62,55 @@ void loop() {
         display.setTextSize(2);
         display.print(door_elapsed_time); display.println(F(" sec"));
         display.display();
+        door_buzzer();
         b4_elapsed_time = door_elapsed_time;
       }
     }
   }else{ //冷蔵庫の扉が開かれていない場合
     if(door_recorded == true){
+      if(buzzer_status == 8){
+        noTone(buzzer_pin);
+      }
       door_recorded = false;
       b4_elapsed_time = 100;
+      buzzer_status = 0;
     }
     get_env_info();
+  }
+}
+
+void door_buzzer(){
+  if(door_elapsed_time >= 25 && buzzer_status == 0){
+    tone(buzzer_pin,262,BUZZER_LEN); // ド
+    buzzer_status = 1;
+  }
+  if(door_elapsed_time >= 30 && buzzer_status == 1){
+    tone(buzzer_pin,294,BUZZER_LEN); // レ
+    buzzer_status = 2;
+  }
+  if(door_elapsed_time >= 35 && buzzer_status == 2){
+    tone(buzzer_pin,330,BUZZER_LEN); // ミ
+    buzzer_status = 3;
+  }
+  if(door_elapsed_time >= 40 && buzzer_status == 3){
+    tone(buzzer_pin,349,BUZZER_LEN); // ファ
+    buzzer_status = 4;
+  }
+  if(door_elapsed_time >= 45 && buzzer_status == 4){
+    tone(buzzer_pin,392,BUZZER_LEN); // ソ
+    buzzer_status = 5;
+  }
+  if(door_elapsed_time >= 50 && buzzer_status == 5){
+    tone(buzzer_pin,440,BUZZER_LEN); // ラ
+    buzzer_status = 6;
+  }
+  if(door_elapsed_time >= 55 && buzzer_status == 6){
+    tone(buzzer_pin,494,BUZZER_LEN); // シ
+    buzzer_status = 7;
+  }
+  if(door_elapsed_time >= 60 && buzzer_status == 7){
+    tone(buzzer_pin,523); // ド
+    buzzer_status = 8;
   }
 }
 
