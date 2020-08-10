@@ -50,14 +50,18 @@ void testdrawstyles(void) {
   display.setTextSize(1);             // Normal 1:1 pixel scale
   display.setTextColor(SSD1306_WHITE);        // Draw white text
   display.setCursor(0,0);             // Start at top-left corner
-  display.println(F("Hello, world!"));
+  //display.println(F("Hello, world!"));
 
-  display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
-  display.println(3.141592);
+  //display.setTextColor(SSD1306_BLACK, SSD1306_WHITE); // Draw 'inverse' text
+  //display.println(3.141592);
 
-  display.setTextSize(3);             // Draw 2X-scale text
-  display.setTextColor(SSD1306_WHITE);
-  display.print(F("0x")); display.println(0xDEADBEEF, HEX);
+  display.setTextSize(2);             // Draw 2X-scale text
+  //display.setTextColor(SSD1306_WHITE);
+  //display.print(F("0x")); display.println(0xDEADBEEF, HEX);
+  display.println(F("23.6C"));
+  display.println(F("78.9%"));
+  display.println(F("Test,Test"));
+  display.println(F("Hello!"));
 
   display.display();
   delay(2000);
