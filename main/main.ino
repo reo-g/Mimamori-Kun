@@ -38,16 +38,37 @@ void setup() {
 
 //変数
 float temp,humi;
-unsigned long time1;
-unsigned long time2;
-unsigned long time3;
+unsigned long open_start_time;
+boolean door_recorded = false;
+int door_elapsed_time = 0;
+int b4_elapsed_time = 100;
 
 void loop() {
-  get_env_info();
   if (digitalRead(emergency_button) == LOW){ //緊急ボタンを押された
   emergency();
   }
-  delay(100);
+  if(digitalRead(door_sensor_pin) == HIGH){ //冷蔵庫の扉が開かれた
+    if(door_recorded == false){
+      open_start_time = millis(); //冷蔵庫の扉が開かれた時の時刻を記録
+      door_recorded = true; 
+    }else{
+      door_elapsed_time = (millis() - open_start_time)/1000;
+      if(door_elapsed_time != b4_elapsed_time){      
+        display.clearDisplay();
+        display.setCursor(0,0);
+        display.setTextSize(2);
+        display.print(door_elapsed_time); display.println(F(" sec"));
+        display.display();
+        b4_elapsed_time = door_elapsed_time;
+      }
+    }
+  }else{ //冷蔵庫の扉が開かれていない場合
+    if(door_recorded == true){
+      door_recorded = false;
+      b4_elapsed_time = 100;
+    }
+    get_env_info();
+  }
 }
 
 void get_env_info() {
