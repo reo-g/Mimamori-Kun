@@ -72,7 +72,7 @@ void loop() {
     }
   }else{ //冷蔵庫の扉が開かれていない場合
     if(door_recorded == true){
-      if(buzzer_status == 8){
+      if(buzzer_status >= 8){
         noTone(buzzer_pin);
       }
       door_recorded = false;
@@ -115,6 +115,14 @@ void door_buzzer(){
   if(door_elapsed_time >= 60 && buzzer_status == 7){
     tone(buzzer_pin,523); // ド
     buzzer_status = 8;
+  }
+  if(door_elapsed_time >= 60 && buzzer_status == 7){
+    tone(buzzer_pin,523); // ド
+    buzzer_status = 8;
+  }
+  if(door_elapsed_time >= 3600 && buzzer_status == 8){ //1時間も開けっ放しなのは明らかに緊急事態
+    emergency();
+    buzzer_status = 9;
   }
 }
 
