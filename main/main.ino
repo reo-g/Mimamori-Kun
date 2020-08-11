@@ -3,6 +3,7 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include "AE_SHT31.h"
+#include <PanasonicHeatpumpIR.h>
 
 
 //ピン設定
@@ -160,4 +161,22 @@ void soracom_send_long(){ //長押し入力<3>　緊急ボタン押下時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(1500);
   digitalWrite(soracom_signal_pin, LOW);
+}
+
+
+void air_cool_on(){
+  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+  PanasonicDKEHeatpumpIR *heatpumpIR;
+  heatpumpIR = new PanasonicDKEHeatpumpIR();
+  heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
+  
+}
+
+
+void air_cool_off(){
+  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+  PanasonicDKEHeatpumpIR *heatpumpIR;
+  heatpumpIR = new PanasonicDKEHeatpumpIR();
+  heatpumpIR->send(irSender, POWER_OFF, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
+  
 }
