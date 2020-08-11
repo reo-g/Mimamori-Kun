@@ -9,7 +9,7 @@
 //ピン設定
 const int buzzer_pin = 9;
 const int emergency_button = 10;
-const int soracom_signal_pin = 7;
+const int soracom_signal_pin = 8;
 const int door_sensor_pin = 12;
 
 AE_SHT31 SHT31 = AE_SHT31(0x45);
