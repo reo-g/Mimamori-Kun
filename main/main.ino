@@ -53,6 +53,7 @@ void setup() {
 //変数
 float temp,humi,wbgt;
 unsigned long open_start_time;
+unsigned long last_heatalert_time = 0;
 boolean door_recorded = false;
 int door_elapsed_time = 0;
 int b4_elapsed_time = 100;
@@ -91,7 +92,9 @@ void loop() {
       buzzer_status = 0;
     }
     get_env_info();
+    if((millis() - last_heatalert_time)/1000 >= 1800){ //30分が経過して再確認
     wbgt_check();
+    }
   }
 }
 
