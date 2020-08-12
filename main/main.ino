@@ -5,6 +5,17 @@
 #include "AE_SHT31.h"
 #include <PanasonicHeatpumpIR.h>
 
+//宣言
+void door_buzzer();
+void air_cool_on(int target_temp);
+void air_cool_off();
+void get_env_info();
+void wbgt_check();
+void emergency();
+void heatstroke_alert();
+void soracom_send_single();
+void soracom_send_double();
+void soracom_send_long();
 
 //ピン設定
 const int buzzer_pin = 9;
@@ -128,6 +139,7 @@ void door_buzzer(){
 }
 
 void air_cool_on(int target_temp=26){
+  heatstroke_alert();
   IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
   PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
