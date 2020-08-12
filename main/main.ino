@@ -94,6 +94,7 @@ void loop() {
     get_env_info();
     if((millis() - last_heatalert_time)/1000 >= 1800){ //30分が経過して再確認
     wbgt_check();
+    last_heatalert_time = millis();
     }
   }
 }
