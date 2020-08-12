@@ -40,7 +40,7 @@ void setup() {
 }
 
 //変数
-float temp,humi;
+float temp,humi,wbgt;
 unsigned long open_start_time;
 boolean door_recorded = false;
 int door_elapsed_time = 0;
@@ -80,6 +80,7 @@ void loop() {
       buzzer_status = 0;
     }
     get_env_info();
+    wbgt_check();
   }
 }
 
@@ -126,6 +127,23 @@ void door_buzzer(){
   }
 }
 
+void air_cool_on(int target_temp=26){
+  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+  PanasonicDKEHeatpumpIR *heatpumpIR;
+  heatpumpIR = new PanasonicDKEHeatpumpIR();
+  heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
+  
+}
+
+
+void air_cool_off(){
+  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+  PanasonicDKEHeatpumpIR *heatpumpIR;
+  heatpumpIR = new PanasonicDKEHeatpumpIR();
+  heatpumpIR->send(irSender, POWER_OFF, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
+  
+}
+
 void get_env_info() {
   SHT31.GetTempHum();
   
@@ -138,6 +156,15 @@ void get_env_info() {
   display.print(temp); display.println(F(" C"));
   display.print(humi); display.println(F(" %"));
   display.display();
+}
+
+void wbgt_check(){
+  wbgt = 0.735*temp+0.0374*humi+0.00292*temp*humi-4.064;
+  if(wbgt>31){ //WBGT値が厳重警戒基準値に達したらエアコン24℃
+    air_cool_on(24);
+  }else if(wbgt>28){ //WBGT値が警戒値に達したらエアコン26℃
+    air_cool_on(26);
+  }
 }
 
 void emergency(){
@@ -169,22 +196,4 @@ void soracom_send_long(){ //長押し入力<3>　緊急ボタン押下時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(1500);
   digitalWrite(soracom_signal_pin, LOW);
-}
-
-
-void air_cool_on(){
-  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
-  PanasonicDKEHeatpumpIR *heatpumpIR;
-  heatpumpIR = new PanasonicDKEHeatpumpIR();
-  heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
-  
-}
-
-
-void air_cool_off(){
-  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
-  PanasonicDKEHeatpumpIR *heatpumpIR;
-  heatpumpIR = new PanasonicDKEHeatpumpIR();
-  heatpumpIR->send(irSender, POWER_OFF, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
-  
 }
