@@ -59,6 +59,7 @@ boolean door_recorded = false;
 int door_elapsed_time = 0;
 int b4_elapsed_time = 100;
 int buzzer_status = 0;
+int door_count = 0;
 
 #define BUZZER_LEN 200
 
@@ -88,6 +89,7 @@ void loop() {
       if(buzzer_status >= 8){
         noTone(buzzer_pin);
       }
+      door_count++;
       door_recorded = false;
       b4_elapsed_time = 100;
       buzzer_status = 0;
@@ -178,12 +180,14 @@ void wbgt_check(){
 
 void OLED_display(){
   get_env_info();
+ 
   display.clearDisplay();
   display.setCursor(0,0);
   display.setTextSize(2);
   display.print(F("  "));  display.print(temp); display.println(F(" C"));
   display.print(F("  "));  display.print(humi); display.println(F(" %")); 
   display.print(F("WBGT:")); display.println(wbgt); 
+  display.print(F("Count: ")); display.println(door_count); 
   display.display();
 }
 
