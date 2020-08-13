@@ -6,6 +6,13 @@
 #include <PanasonicHeatpumpIR.h>
 #include <Fonts/FreeSans18pt7b.h>
 
+//ライブラリの入手先
+//arduino-heatpumpir  https://github.com/ToniA/arduino-heatpumpir
+//SHT31 http://akizukidenshi.com/download/AE_SHT31.zip
+//Adafruit_SSD1306 https://github.com/adafruit/Adafruit_SSD1306
+//Adafruit-GFX-Library https://github.com/adafruit/Adafruit-GFX-Library
+
+
 //宣言
 void door_buzzer();
 void air_cool_on(int target_temp);
@@ -27,6 +34,9 @@ const int door_sensor_pin = 12;
 
 AE_SHT31 SHT31 = AE_SHT31(0x45);
 Adafruit_SSD1306 display(128, 64, &Wire, -1);
+
+IRSenderPWM irSender(3);
+PanasonicDKEHeatpumpIR *heatpumpIR;
 
 
 void setup() {
@@ -224,8 +234,6 @@ void door_buzzer(){ //扉の開閉時間に応じてドレミファソラシド�
 }
 
 void air_cool_on(int target_temp){ //エアコンON(温度変更)赤外線信号を送信
-  IRSenderPWM irSender(3); 
-  PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
   delay(600);
@@ -235,8 +243,6 @@ void air_cool_on(int target_temp){ //エアコンON(温度変更)赤外線信号
 
 
 void air_cool_off(){ //エアコンOFF赤外線信号を送信
-  IRSenderPWM irSender(3);
-  PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_OFF, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
   
