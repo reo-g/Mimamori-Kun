@@ -312,5 +312,5 @@ void soracom_send_long(){ //長押し入力<3>　緊急ボタン押下時
   digitalWrite(soracom_signal_pin, HIGH);
   delay(1500);
   digitalWrite(soracom_signal_pin, LOW);
-  delay(3000);
+  delay(4000);
 }
