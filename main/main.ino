@@ -92,10 +92,6 @@ void loop() {
       buzzer_status = 0;
     }
     get_env_info();
-    if((millis() - last_heatalert_time)/1000 >= 1800){ //30分が経過して再確認
-    wbgt_check();
-    last_heatalert_time = millis();
-    }
   }
 }
 
@@ -148,7 +144,7 @@ void air_cool_on(int target_temp=26){
   PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
-  
+  last_heatalert_time = millis();
 }
 
 
@@ -165,21 +161,25 @@ void get_env_info() {
   
   temp = SHT31.Temperature();
   humi = SHT31.Humidity();
+  wbgt_check();
 
   display.clearDisplay();
   display.setCursor(0,0);
   display.setTextSize(2);
   display.print(temp); display.println(F(" C"));
-  display.print(humi); display.println(F(" %"));
+  display.print(humi); display.println(F(" %")); 
+  display.print(F("WBGT:")); display.println(wbgt); 
   display.display();
 }
 
 void wbgt_check(){
   wbgt = 0.735*temp+0.0374*humi+0.00292*temp*humi-4.064;
-  if(wbgt>31){ //WBGT値が厳重警戒基準値に達したらエアコン24℃
-    air_cool_on(24);
-  }else if(wbgt>28){ //WBGT値が警戒値に達したらエアコン26℃
-    air_cool_on(26);
+  if(((millis() - last_heatalert_time)/1000) >= 1800 || last_heatalert_time==0){ //前回発動から30分が経過して再確認
+    if(wbgt>=31){ //WBGT値が厳重警戒基準値に達したらエアコン24℃
+      air_cool_on(24);
+    }else if(wbgt>=25){ //WBGT値が警戒値に達したらエアコン26℃
+      air_cool_on(26);
+    } 
   }
 }
 
