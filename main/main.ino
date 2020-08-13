@@ -189,6 +189,7 @@ void emergency(){
 }
 
 void heatstroke_alert(){
+  tone(buzzer_pin,900,3000);
   soracom_send_double();
 }
 
