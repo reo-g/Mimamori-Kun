@@ -147,10 +147,7 @@ void air_cool_on(int target_temp=26){
   PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
-  delay(200);
-  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
-  PanasonicDKEHeatpumpIR *heatpumpIR;
-  heatpumpIR = new PanasonicDKEHeatpumpIR();
+  delay(600);
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
   last_heatalert_time = millis();
 }
