@@ -170,10 +170,10 @@ void get_env_info() {
 void wbgt_check(){
   wbgt = 0.735*temp+0.0374*humi+0.00292*temp*humi-4.064;
   if(((millis() - last_heatalert_time)/1000) >= 1800 || last_heatalert_time==0){ //前回発動から30分が経過して再確認
-    if(wbgt>=31){ //WBGT値が厳重警戒基準値に達したらエアコン24℃
+    if(wbgt>=31){ //WBGT値が危険基準値(31℃以上)に達したらエアコン24℃
       heatstroke_alert(); 
       air_cool_on(24);
-    }else if(wbgt>=28){ //WBGT値が警戒値に達したらエアコン26℃
+    }else if(wbgt>=28){ //WBGT値が厳重警戒値(28℃以上)に達したらエアコン26℃
       air_cool_on(26);
     } 
   }
