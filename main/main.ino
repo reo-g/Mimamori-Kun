@@ -16,6 +16,7 @@ void heatstroke_alert();
 void soracom_send_single();
 void soracom_send_double();
 void soracom_send_long();
+void OLED_display();
 
 //ピン設定
 const int buzzer_pin = 9;
@@ -91,7 +92,7 @@ void loop() {
       b4_elapsed_time = 100;
       buzzer_status = 0;
     }
-    get_env_info();
+    OLED_display();
   }
 }
 
@@ -162,14 +163,6 @@ void get_env_info() {
   temp = SHT31.Temperature();
   humi = SHT31.Humidity();
   wbgt_check();
-
-  display.clearDisplay();
-  display.setCursor(0,0);
-  display.setTextSize(2);
-  display.print(temp); display.println(F(" C"));
-  display.print(humi); display.println(F(" %")); 
-  display.print(F("WBGT:")); display.println(wbgt); 
-  display.display();
 }
 
 void wbgt_check(){
@@ -181,6 +174,17 @@ void wbgt_check(){
       air_cool_on(26);
     } 
   }
+}
+
+void OLED_display(){
+  get_env_info();
+  display.clearDisplay();
+  display.setCursor(0,0);
+  display.setTextSize(2);
+  display.print(F("  "));  display.print(temp); display.println(F(" C"));
+  display.print(F("  "));  display.print(humi); display.println(F(" %")); 
+  display.print(F("WBGT:")); display.println(wbgt); 
+  display.display();
 }
 
 void emergency(){
