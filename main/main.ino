@@ -99,8 +99,8 @@ void loop() {
   }
 }
 
-void door_buzzer(){
-  if(door_elapsed_time >= 25 && buzzer_status == 0){
+void door_buzzer(){ //扉の開閉時間に応じてドレミファソラシドでお知らせ
+  if(door_elapsed_time >= 25 && buzzer_status == 0){ 
     tone(buzzer_pin,262,BUZZER_LEN); // ド
     buzzer_status = 1;
   }
@@ -132,18 +132,14 @@ void door_buzzer(){
     tone(buzzer_pin,523); // ド
     buzzer_status = 8;
   }
-  if(door_elapsed_time >= 60 && buzzer_status == 7){
-    tone(buzzer_pin,523); // ド
-    buzzer_status = 8;
-  }
   if(door_elapsed_time >= 3600 && buzzer_status == 8){ //1時間も開けっ放しなのは明らかに緊急事態
     emergency();
     buzzer_status = 9;
   }
 }
 
-void air_cool_on(int target_temp=26){
-  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+void air_cool_on(int target_temp){ //エアコンON(温度変更)赤外線信号を送信
+  IRSenderPWM irSender(3); 
   PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
@@ -153,15 +149,15 @@ void air_cool_on(int target_temp=26){
 }
 
 
-void air_cool_off(){
-  IRSenderPWM irSender(3); // irSender(IRLEDpinNum);
+void air_cool_off(){ //エアコンOFF赤外線信号を送信
+  IRSenderPWM irSender(3);
   PanasonicDKEHeatpumpIR *heatpumpIR;
   heatpumpIR = new PanasonicDKEHeatpumpIR();
   heatpumpIR->send(irSender, POWER_OFF, MODE_COOL, FAN_AUTO, 26, VDIR_AUTO, HDIR_AUTO);
   
 }
 
-void get_env_info() {
+void get_env_info() { //温湿度および推定WBGT値を取得
   SHT31.GetTempHum();
   
   temp = SHT31.Temperature();
@@ -169,7 +165,7 @@ void get_env_info() {
   wbgt_check();
 }
 
-void wbgt_check(){
+void wbgt_check(){ //WBGT値を推測
   wbgt = 0.735*temp+0.0374*humi+0.00292*temp*humi-4.064;
   if(((millis() - last_heatalert_time)/1000) >= 1800 || last_heatalert_time==0){ //前回発動から30分が経過して再確認
     if(wbgt>=31){ //WBGT値が危険基準値(31℃以上)に達したらエアコン24℃
@@ -181,7 +177,7 @@ void wbgt_check(){
   }
 }
 
-void OLED_display(){
+void OLED_display(){ //OLEDディスプレイへの表示を行う
   get_env_info();
   if(((millis()-day_elapsed_time)/1000)>=86400){//24時間経過したら開閉回数リセット
     door_count = 0; 
@@ -197,12 +193,12 @@ void OLED_display(){
   display.display();
 }
 
-void emergency(){
+void emergency(){ //緊急ボタン押下時に接点入力へデータ送信
   tone(buzzer_pin,1046,3000);
   soracom_send_long();
 }
 
-void heatstroke_alert(){
+void heatstroke_alert(){ //熱中症危険時に接点入力へデータ送信
   tone(buzzer_pin,900,3000);
   soracom_send_double();
 }
