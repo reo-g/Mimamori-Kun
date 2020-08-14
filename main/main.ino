@@ -75,6 +75,7 @@ int door_count = 0;
 
 #define BUZZER_LEN 200 //開閉中のブザーの長さ
 
+//http://javl.github.io/image2cpp/を用いて生成
 // '秒'のグラフィック表示, 29x29px
 const unsigned char byo_Bitmap [] PROGMEM = {
   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x1c, 0x00, 0x00, 0xf0, 0x18, 0x00, 
@@ -174,7 +175,7 @@ void loop() {
         display.setCursor(0,57);
         display.setFont(&FreeSans18pt7b);
         display.println(door_elapsed_time);
-        display.drawBitmap(98, 34, byo_Bitmap, 29, 29, WHITE);
+        display.drawBitmap(98, 34, byo_Bitmap, 29, 29, WHITE);//漢字で'秒'を表示
         display.display();
         door_buzzer();
         b4_elapsed_time = door_elapsed_time;
