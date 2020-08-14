@@ -71,6 +71,7 @@ boolean door_recorded = false;
 int door_elapsed_time = 0;
 int b4_elapsed_time = 100;
 int buzzer_status = 0;
+int ac_status = 0;
 int door_count = 0;
 
 #define BUZZER_LEN 200 //開閉中のブザーの長さ
@@ -239,7 +240,6 @@ void air_cool_on(int target_temp){ //エアコンON(温度変更)赤外線信号
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
   delay(600);
   heatpumpIR->send(irSender, POWER_ON, MODE_COOL, FAN_AUTO, target_temp, VDIR_AUTO, HDIR_AUTO);
-  last_heatalert_time = millis();
 }
 
 
@@ -264,8 +264,15 @@ void wbgt_check(){ //WBGT値を推測
       heatstroke_alert(); 
       air_cool_on(24);
     }else if(wbgt>=28){ //WBGT値が厳重警戒値(28℃以上)に達したらエアコン26℃
-      air_cool_on(26);
-    } 
+      if(ac_status != 1){
+        air_cool_on(26);
+        ac_status = 1;
+      }
+    }else{
+      if(ac_status != 0){
+        ac_status = 0;
+      }
+    }
   }
 }
 
@@ -297,6 +304,7 @@ void emergency(){ //緊急ボタン押下時に接点入力へデータ送信
 void heatstroke_alert(){ //熱中症危険時に接点入力へデータ送信
   tone(buzzer_pin,900,3000);
   soracom_send_double();
+  last_heatalert_time = millis();
 }
 
 void soracom_send_single(){ //シングルクリック<1>　扉開閉時
